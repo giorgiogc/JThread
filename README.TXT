@@ -1,7 +1,7 @@
-								 June 20, 2006
+								 July 25, 2011
 
 
-                        Notes about JThread (v1.2.1)
+                        Notes about JThread (v1.3.0)
 
 
 
@@ -41,20 +41,8 @@ IN THE SOFTWARE.
 INSTALLATION NOTES
 ==================
 
-* To compile the library on a unix-like platform, just start the configure
-  script. 
-
-  This should generate a makefile which you can use to start building the 
-  library using 'make'.
-
-* To compile the library on a MS-Windows platform using Visual C++, you can
-  use the project files included in the archive. 
- 
-  IMPORTANT: As of version 1.2.0, you can choose between two mutex 
-             implementations on the MS-Windows platform. By default, the
-	     same implementation is used as in previous versions. However,
-	     if you'd like the JMutex class to use a CRITICAL_SECTION
-	     object rather than a mutex handle, you should uncomment the
-	     JMUTEX_CRITICALSECTION define in jmutex.h before compiling
-	     the library.
+The library can be compiled using the CMake build system. In case extra
+include directories or libraries are needed, you can use the 'ADDITIONAL_'
+CMake variables to specify these. They will be stored in both the resulting
+JThread CMake configuration file and the pkg-config file.
 
