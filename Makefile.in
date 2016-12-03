@@ -165,7 +165,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = src doc
+SUBDIRS = src doc pkgconfig
 EXTRA_DIST = LICENSE.MIT ChangeLog README.TXT jthread.dsw jthread.dsp jthread.vcproj jthread.sln jthread_wce.sln jthread_wce.vcproj
 all: all-recursive
 
@@ -349,6 +349,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
+	$(mkdir_p) $(distdir)/pkgconfig
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

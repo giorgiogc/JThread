@@ -1,4 +1,4 @@
-SUBDIRS = src doc
+SUBDIRS = src doc pkgconfig
 EXTRA_DIST = LICENSE.MIT ChangeLog README.TXT jthread.dsw jthread.dsp jthread.vcproj jthread.sln jthread_wce.sln jthread_wce.vcproj
 
 dist-hook: distclean

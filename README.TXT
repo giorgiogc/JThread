@@ -1,12 +1,13 @@
-                                                            September 14, 2005
+                                                                March 17, 2006
 
 
-                        Notes about JThread (v1.1.2)
+                        Notes about JThread (v1.2.0)
 
 
 
 LIBRARY LOCATION AND CONTACT
 ============================
+
 Normally, you should be able to download the latest version of the library
 from this url:
 	http://research.edm.uhasselt.be/jori/jthread/jthread.html
@@ -49,4 +50,11 @@ INSTALLATION NOTES
 * To compile the library on a MS-Windows platform using Visual C++, you can
   use the project files included in the archive. 
  
+  IMPORTANT: As of version 1.2.0, you can choose between two mutex 
+             implementations on the MS-Windows platform. By default, the
+	     same implementation is used as in previous versions. However,
+	     if you'd like the JMutex class to use a CRITICAL_SECTION
+	     object rather than a mutex handle, you should uncomment the
+	     JMUTEX_CRITICALSECTION define in jmutex.h before compiling
+	     the library.
 

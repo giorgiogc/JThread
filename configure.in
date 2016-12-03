@@ -1,5 +1,5 @@
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(jthread,1.1.2)
+AM_INIT_AUTOMAKE(jthread,1.2.0)
 
 if test "BLA$CXXFLAGS" = "BLA" ; then
 	dnl CXXFLAGS="-g -Werror -Wall"
@@ -21,5 +21,8 @@ dnl ---------------------------------------------------------------------------
 AC_OUTPUT(Makefile \
 	  src/Makefile \
           doc/Makefile \
+          pkgconfig/Makefile \
+          pkgconfig/jthread.pc \
+          pkgconfig/jthread-uninstalled.pc \
 	  )
 
