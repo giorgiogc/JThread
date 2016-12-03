@@ -103,6 +103,7 @@ int JThread::Kill()
 		return ERR_JTHREAD_NOTRUNNING;
 	}
 	TerminateThread(threadhandle,0);
+	CloseHandle(threadhandle);
 	running = false;
 	runningmutex.Unlock();
 	return 0;
@@ -151,6 +152,7 @@ DWORD WINAPI JThread::TheThread(void *param)
 	jthread->runningmutex.Lock();
 	jthread->running = false;
 	jthread->retval = ret;
+	CloseHandle(jthread->threadhandle);
 	jthread->runningmutex.Unlock();
 	return 0;		
 }
