@@ -1,4 +1,4 @@
-                                                             February 12, 2001
+                                                                August 8, 2004
 
 
 
@@ -6,6 +6,9 @@
 				  
 			 	    ---------
 
+ 1.0.1 (August 2004)
+ 	* configure now detects pdflatex and listings package: 
+	  only if these are found, documentation is built.
 
  1.0.0 (February 2001)
  	* Initial release

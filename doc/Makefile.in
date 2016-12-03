@@ -1,12 +1,10 @@
 
-all: manual.ps
+all: manual.pdf
 
-manual.ps: manual.tex
-	latex manual.tex
-	latex manual.tex
-	latex manual.tex
-	dvips -o manual.ps manual.dvi
-
+manual.pdf: manual.tex
+	@echo "Building documentation..."
+	@pdflatex manual.tex </dev/null >/dev/null 2>&1
+	@pdflatex manual.tex </dev/null >/dev/null 2>&1
 clean:
-	rm -f *.log *.toc *.aux *.dvi *.ps
+	rm -f *.log *.toc *.aux *.pdf
 

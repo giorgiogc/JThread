@@ -3,7 +3,7 @@
     This file is a part of the JThread package, which contains some object-
     oriented thread wrappers for different thread implementations.
 
-    Copyright (c) 2000-2001  Jori Liesenborgs (jori@lumumba.luc.ac.be)
+    Copyright (c) 2000-2004  Jori Liesenborgs (jori@lumumba.luc.ac.be)
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

@@ -1,6 +1,6 @@
 AC_INIT(configure.in)
 
-JTHREAD_DIRECTORIES="src doc"
+JTHREAD_DIRECTORIES="src"
 JTHREAD_CFLAGS="-O2"
 JTHREAD_TARGETS=dummymsg
 JTHREAD_ARFLAGS=
@@ -103,6 +103,37 @@ dnl Check for pthread
 dnl ---------------------------------------------------------------------------
 
 AC_CHECK_HEADER(pthread.h,,AC_MSG_ERROR(You need libpthread to compile the JThread package))
+
+if test "$USE_LD" = yes ; then
+	AC_MSG_CHECKING(if we can link against pthread)
+	echo "int main(void){return 0;}" > configtest.c
+	if eval $CC -c -o configtest.o configtest.c 2>/dev/null; then
+		if eval $JTHREAD_LD $JTHREAD_LDFLAGS conftest -o conftest.so configtest.o -lpthread 2>/dev/null; then
+			JTHREAD_LDFLAGS="-lpthread $JTHREAD_LDFLAGS"
+			AC_MSG_RESULT(yes)
+		else
+			AC_MSG_RESULT(no)
+		fi
+	fi
+	rm -f configtest.c configtest.so configtest.o 2>/dev/null
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl Check for latex and listings to compile documentation
+dnl ---------------------------------------------------------------------------
+
+AC_CHECK_PROG([FOUNDPDFLATEX],[pdflatex],[yes],[no])
+if test "$FOUNDPDFLATEX" = yes ; then
+	AC_MSG_CHECKING(for LaTeX listings package)
+	echo "\documentclass{article}\usepackage{listings}\begin{document}\end{document}" >listingstest.tex
+	if ! [ pdflatex listingstest.tex </dev/null >/dev/null 2>&1 ]; then
+		AC_MSG_RESULT(not found)
+	else
+		JTHREAD_DIRECTORIES="$JTHREAD_DIRECTORIES doc"
+		AC_MSG_RESULT(found)
+	fi
+	rm -f listingstest.{tex,log,aux} texput.log
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl Finish
