@@ -3,7 +3,7 @@
     This file is a part of the JThread package, which contains some object-
     oriented thread wrappers for different thread implementations.
 
-    Copyright (c) 2000-2006  Jori Liesenborgs (jori@lumumba.uhasselt.be)
+    Copyright (c) 2000-2006  Jori Liesenborgs (jori.liesenborgs@gmail.com)
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -74,8 +74,13 @@ int JThread::Start()
 	}
 	runningmutex.Unlock();
 	
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
+	
 	continuemutex.Lock();
-	status = pthread_create(&threadid,NULL,TheThread,this);
+	status = pthread_create(&threadid,&attr,TheThread,this);	
+	pthread_attr_destroy(&attr);
 	if (status != 0)
 	{
 		continuemutex.Unlock();

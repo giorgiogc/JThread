@@ -1,4 +1,4 @@
-                                                                March 17, 2006
+                                                                 June 20, 2006
 
 
 
@@ -6,6 +6,12 @@
 				  
 			 	    ---------
 
+
+ 1.2.1 (June 2006)
+ 	* In the pthread implementation the thread is now created in the
+	  detached state. This makes sure the resources of a thread are
+	  freed when the thread ends. Thanks to Julien Künzi 
+	  (julien.kuenzi@epfl.ch) for bringing this to my attention.
 
  1.2.0 (March 2006)
  	* Added JMutexAutoLock class. Thanks to Jeremy Noring 

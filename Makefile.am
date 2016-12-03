@@ -1,5 +1,6 @@
 SUBDIRS = src doc pkgconfig
-EXTRA_DIST = LICENSE.MIT ChangeLog README.TXT jthread.dsw jthread.dsp jthread.vcproj jthread.sln jthread_wce.sln jthread_wce.vcproj
+EXTRA_DIST = LICENSE.MIT ChangeLog README.TXT jthread.dsw jthread.dsp jthread.vcproj jthread.sln \
+	     jthread_wce.sln jthread_wce.vcproj jthread_wce5.sln jthread_wce5.vcproj
 
 dist-hook: distclean
 	mv $(distdir)/jthread.dsw $(distdir)/jthread.dsw.tmp

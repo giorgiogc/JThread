@@ -1,7 +1,7 @@
-                                                                March 17, 2006
+								 June 20, 2006
 
 
-                        Notes about JThread (v1.2.0)
+                        Notes about JThread (v1.2.1)
 
 
 
@@ -13,7 +13,7 @@ from this url:
 	http://research.edm.uhasselt.be/jori/jthread/jthread.html
 
 If you have questions about the library, you can mail me at:
-	jori@lumumba.uhasselt.be
+	jori.liesenborgs@gmail.com
 
 
 DISCLAIMER & COPYRIGHT

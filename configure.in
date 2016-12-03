@@ -1,5 +1,5 @@
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(jthread,1.2.0)
+AM_INIT_AUTOMAKE(jthread,1.2.1)
 
 if test "BLA$CXXFLAGS" = "BLA" ; then
 	dnl CXXFLAGS="-g -Werror -Wall"
