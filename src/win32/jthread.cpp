@@ -3,7 +3,7 @@
     This file is a part of the JThread package, which contains some object-
     oriented thread wrappers for different thread implementations.
 
-    Copyright (c) 2000-2004  Jori Liesenborgs (jori@lumumba.luc.ac.be)
+    Copyright (c) 2000-2005  Jori Liesenborgs (jori@lumumba.uhasselt.be)
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,10 @@
 */
 
 #include "jthread.h"
+
+#ifndef _WIN32_WCE
+	#include <process.h>
+#endif // _WIN32_WCE
 
 JThread::JThread()
 {
@@ -69,7 +73,11 @@ int JThread::Start()
 	runningmutex.Unlock();
 	
 	continuemutex.Lock();
+#ifndef _WIN32_WCE
+	threadhandle = (HANDLE)_beginthreadex(NULL,0,TheThread,this,0,&threadid);
+#else
 	threadhandle = CreateThread(NULL,0,TheThread,this,0,&threadid);
+#endif // _WIN32_WCE
 	if (threadhandle == NULL)
 	{
 		continuemutex.Unlock();
@@ -132,7 +140,11 @@ void *JThread::GetReturnValue()
 	return val;
 }
 
+#ifndef _WIN32_WCE
+UINT __stdcall JThread::TheThread(void *param)
+#else
 DWORD WINAPI JThread::TheThread(void *param)
+#endif // _WIN32_WCE
 {
 	JThread *jthread;
 	void *ret;

@@ -3,7 +3,7 @@
     This file is a part of the JThread package, which contains some object-
     oriented thread wrappers for different thread implementations.
 
-    Copyright (c) 2000-2004  Jori Liesenborgs (jori@lumumba.luc.ac.be)
+    Copyright (c) 2000-2005  Jori Liesenborgs (jori@lumumba.uhasselt.be)
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -29,7 +29,11 @@
 
 #define JMUTEX_H
 
-#ifdef WIN32
+#if (defined(WIN32) || defined(_WIN32_WCE))
+
+	#ifndef _WIN32_WCE
+		#include <process.h>
+	#endif // _WIN32_WCE
 	#include <winsock2.h>
 	#include <windows.h>
 #else // using pthread
@@ -37,7 +41,7 @@
 #endif // WIN32
 
 #define ERR_JMUTEX_ALREADYINIT						-1
-#define ERR_JMUTEX_NOTINIT						-2
+#define ERR_JMUTEX_NOTINIT							-2
 #define ERR_JMUTEX_CANTCREATEMUTEX					-3
 
 class JMutex
@@ -50,7 +54,7 @@ public:
 	int Unlock();
 	bool IsInitialized() 						{ return initialized; }
 private:
-#ifdef WIN32
+#if (defined(WIN32) || defined(_WIN32_WCE))
 	HANDLE mutex;
 #else // pthread mutex
 	pthread_mutex_t mutex;

@@ -1,7 +1,7 @@
-                                                             December 24, 2004
+                                                            September 14, 2005
 
 
-                        Notes about JThread (v1.1.1)
+                        Notes about JThread (v1.1.2)
 
 
 
@@ -9,10 +9,10 @@ LIBRARY LOCATION AND CONTACT
 ============================
 Normally, you should be able to download the latest version of the library
 from this url:
-	http://research.edm.luc.ac.be/jori/jthread/jthread.html
+	http://research.edm.uhasselt.be/jori/jthread/jthread.html
 
 If you have questions about the library, you can mail me at:
-	jori@lumumba.luc.ac.be
+	jori@lumumba.uhasselt.be
 
 
 DISCLAIMER & COPYRIGHT

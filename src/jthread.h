@@ -3,7 +3,7 @@
     This file is a part of the JThread package, which contains some object-
     oriented thread wrappers for different thread implementations.
 
-    Copyright (c) 2000-2004  Jori Liesenborgs (jori@lumumba.luc.ac.be)
+    Copyright (c) 2000-2005  Jori Liesenborgs (jori@lumumba.uhasselt.be)
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -50,11 +50,16 @@ public:
 protected:
 	void ThreadStarted();
 private:
-#ifdef WIN32
-	static DWORD WINAPI TheThread(void *param);
-	
-	HANDLE threadhandle;
+
+#if (defined(WIN32) || defined(_WIN32_WCE))
+#ifdef _WIN32_WCE
 	DWORD threadid;
+	static DWORD WINAPI TheThread(void *param);
+#else
+	static UINT __stdcall TheThread(void *param);
+	UINT threadid;
+#endif // _WIN32_WCE
+	HANDLE threadhandle;
 #else // pthread type threads
 	static void *TheThread(void *param);
 	
