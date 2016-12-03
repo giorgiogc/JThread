@@ -51,6 +51,7 @@ public:
 	virtual void *Thread() = 0;
 	bool IsRunning();
 	void *GetReturnValue();
+	bool IsSameThread();
 protected:
 	void ThreadStarted();
 private:

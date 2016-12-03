@@ -151,6 +151,11 @@ void *JThread::GetReturnValue()
 	return val;
 }
 
+bool JThread::IsSameThread()
+{
+	return pthread_equal(pthread_self(), threadid);
+}
+
 void *JThread::TheThread(void *param)
 {
 	JThread *jthread;
