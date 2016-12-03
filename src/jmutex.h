@@ -47,7 +47,7 @@
 namespace jthread
 {
 
-class JMutex
+class JTHREAD_IMPORTEXPORT JMutex
 {
 public:
 	JMutex();

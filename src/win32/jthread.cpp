@@ -26,6 +26,7 @@
 */
 
 #include "jthread.h"
+#include "jmutexautolock.h"
 
 #ifndef _WIN32_WCE
 	#include <process.h>
@@ -133,14 +134,13 @@ bool JThread::IsRunning()
 
 void *JThread::GetReturnValue()
 {
+	JMutexAutoLock autolock(runningmutex);
 	void *val;
 	
-	runningmutex.Lock();
 	if (running)
 		val = NULL;
 	else
 		val = retval;
-	runningmutex.Unlock();
 	return val;
 }
 

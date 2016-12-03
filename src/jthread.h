@@ -41,7 +41,7 @@
 namespace jthread
 {
 
-class JThread
+class JTHREAD_IMPORTEXPORT JThread
 {
 public:
 	JThread();

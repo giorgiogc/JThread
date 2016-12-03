@@ -1,5 +1,7 @@
 set (HEADERS jmutex.h jthread.h jmutexautolock.h ${PROJECT_BINARY_DIR}/src/jthreadconfig.h)
 
+add_definitions(-DJTHREAD_COMPILING)
+
 if (CMAKE_USE_WIN32_THREADS_INIT)
 	set(SOURCES win32/jmutex.cpp win32/jthread.cpp)
 	set(JTHREAD_CONFIG_WIN32THREADS "#define JTHREAD_CONFIG_WIN32THREADS")
@@ -17,22 +19,24 @@ endif (CMAKE_USE_WIN32_THREADS_INIT)
 
 if (NOT UNIX)
 	set(CMAKE_DEBUG_POSTFIX _d)
+	set(JTHREAD_COMPILE_STATIC ON CACHE BOOL "Flag indicating if a static library should be built, or a dynamic one")
 endif (NOT UNIX)
 
-set(JTHREAD_INSTALLTARGETS jthread-static)
-add_library(jthread-static STATIC ${SOURCES} ${HEADERS})
-set_target_properties(jthread-static PROPERTIES OUTPUT_NAME jthread)
-set_target_properties(jthread-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-target_link_libraries(jthread-static ${CMAKE_THREAD_LIBS_INIT})
-
-if (UNIX)
+if (UNIX OR JTHREAD_COMPILE_STATIC)
+	set(JTHREAD_INSTALLTARGETS jthread-static)
+	add_library(jthread-static STATIC ${SOURCES} ${HEADERS})
+	set_target_properties(jthread-static PROPERTIES OUTPUT_NAME jthread)
+	set_target_properties(jthread-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	target_link_libraries(jthread-static ${CMAKE_THREAD_LIBS_INIT})
+endif(UNIX OR JTHREAD_COMPILE_STATIC)
+if (UNIX OR NOT JTHREAD_COMPILE_STATIC)
 	add_library(jthread-shared SHARED ${SOURCES} ${HEADERS})
 	set_target_properties(jthread-shared PROPERTIES VERSION ${VERSION})
 	set_target_properties(jthread-shared PROPERTIES OUTPUT_NAME jthread)
 	set_target_properties(jthread-shared PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set(JTHREAD_INSTALLTARGETS ${JTHREAD_INSTALLTARGETS} jthread-shared)
 	target_link_libraries(jthread-shared ${CMAKE_THREAD_LIBS_INIT})
-endif (UNIX)
+endif (UNIX OR NOT JTHREAD_COMPILE_STATIC)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_BINARY_DIR}/src)
@@ -45,16 +49,36 @@ if (UNIX)
 	get_filename_component(JTHREAD_LIBNAME "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME)
 	set(JTHREAD_LIBS "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME}" ${CMAKE_THREAD_LIBS_INIT})
 else (UNIX)
-	get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static RELEASE_LOCATION)
-	get_filename_component(JTHREAD_LIBNAME_RELEASE "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME)
-	get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static DEBUG_LOCATION)
-	get_filename_component(JTHREAD_LIBNAME_DEBUG "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME)
-	set(JTHREAD_LIBS optimized "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_RELEASE}" 
-		debug "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_DEBUG}" ${CMAKE_THREAD_LIBS_INIT})
+	if (JTHREAD_COMPILE_STATIC)
+		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static RELEASE_LOCATION)
+		get_filename_component(JTHREAD_LIBNAME_RELEASE "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
+		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static DEBUG_LOCATION)
+		get_filename_component(JTHREAD_LIBNAME_DEBUG "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
+	else (JTHREAD_COMPILE_STATIC)
+		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-shared RELEASE_LOCATION)
+		get_filename_component(JTHREAD_LIBNAME_RELEASE "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
+		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-shared DEBUG_LOCATION)
+		get_filename_component(JTHREAD_LIBNAME_DEBUG "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
+	endif (JTHREAD_COMPILE_STATIC)
+	set(JTHREAD_LIBS optimized "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_RELEASE}.lib" 
+		debug "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_DEBUG}.lib" ${CMAKE_THREAD_LIBS_INIT})
 endif (UNIX)
+
+if (UNIX OR JTHREAD_COMPILE_STATIC)
+	set(JTHREAD_IMPORT "")
+	set(JTHREAD_EXPORT "")
+else (UNIX OR JTHREAD_COMPILE_STATIC)
+	set(JTHREAD_IMPORT "__declspec(dllimport)")
+	set(JTHREAD_EXPORT "__declspec(dllexport)")
+endif (UNIX OR JTHREAD_COMPILE_STATIC)
 
 configure_file("${PROJECT_SOURCE_DIR}/src/jthreadconfig.h.in"
 	       "${PROJECT_BINARY_DIR}/src/jthreadconfig.h")
+
+foreach(ARG ${JTHREAD_LIBS})
+	set(JTHREAD_LIBS_CMAKECONFIG "${JTHREAD_LIBS_CMAKECONFIG} \"${ARG}\"")
+endforeach()
+
 configure_file("${PROJECT_SOURCE_DIR}/cmake/JThreadConfig.cmake.in" 
 	       "${PROJECT_BINARY_DIR}/cmake/JThreadConfig.cmake")
 install(FILES 

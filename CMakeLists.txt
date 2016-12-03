@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(jthread)
-set(VERSION 1.3.0)
+set(VERSION 1.3.1)
 
 set (_DEFAULT_LIBRARY_INSTALL_DIR lib)
 if (EXISTS "${CMAKE_INSTALL_PREFIX}/lib32/" AND CMAKE_SIZEOF_VOID_P EQUAL 4)

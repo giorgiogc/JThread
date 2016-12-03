@@ -1,7 +1,7 @@
-								 July 25, 2011
+							      November 8, 2011
 
 
-                        Notes about JThread (v1.3.0)
+                        Notes about JThread (v1.3.1)
 
 
 

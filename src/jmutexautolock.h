@@ -35,7 +35,7 @@
 namespace jthread
 {
 
-class JMutexAutoLock
+class JTHREAD_IMPORTEXPORT JMutexAutoLock
 {
 public:
 	JMutexAutoLock(JMutex &m) : mutex(m)						{ mutex.Lock(); }
