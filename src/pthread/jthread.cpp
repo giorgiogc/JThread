@@ -56,6 +56,11 @@ int JThread::Start()
 			if (continuemutex.Init() < 0)
 				return ERR_JTHREAD_CANTINITMUTEX;
 		}
+		if (!continuemutex2.IsInitialized())
+		{
+			if (continuemutex2.Init() < 0)
+				return ERR_JTHREAD_CANTINITMUTEX;
+		}
 		mutexinit = true;
 	}
 	
@@ -74,7 +79,7 @@ int JThread::Start()
 		continuemutex.Unlock();
 		return ERR_JTHREAD_CANTSTARTTHREAD;
 	}
-
+	
 	/* Wait until 'running' is set */
 	
 	runningmutex.Lock();			
@@ -84,8 +89,11 @@ int JThread::Start()
 		runningmutex.Lock();
 	}
 	runningmutex.Unlock();
+	
 	continuemutex.Unlock();
 	
+	continuemutex2.Lock();
+	continuemutex2.Unlock();
 	return 0;
 }
 
@@ -130,22 +138,29 @@ void *JThread::TheThread(void *param)
 {
 	JThread *jthread;
 	void *ret;
-
+	
 	jthread = (JThread *)param;
 	
+	jthread->continuemutex2.Lock();
 	jthread->runningmutex.Lock();
 	jthread->running = true;
 	jthread->runningmutex.Unlock();
 	
-	// wait till we can continue
 	jthread->continuemutex.Lock();
 	jthread->continuemutex.Unlock();
 	
 	ret = jthread->Thread();
-	
+
 	jthread->runningmutex.Lock();
 	jthread->running = false;
 	jthread->retval = ret;
 	jthread->runningmutex.Unlock();
-	return NULL;		
+
+	return NULL;
 }
+
+void JThread::ThreadStarted()
+{
+	continuemutex2.Unlock();
+}
+

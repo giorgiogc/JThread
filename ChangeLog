@@ -1,10 +1,17 @@
-                                                                August 8, 2004
+                                                             September 3, 2004
 
 
 
                                 JThread ChangeLog
 				  
 			 	    ---------
+ 1.1.0 (September 2004)
+ 	* Important change: In your own void *Thread() function, you
+	  now have to call JThread::ThreadStarted() at the start of
+	  the function. Until this function is called, the Start()
+	  function blocks. This way, when the Start() function is
+	  finished, we can be really really sure that our own thread
+	  is running.
 
  1.0.1 (August 2004)
  	* configure now detects pdflatex and listings package: 

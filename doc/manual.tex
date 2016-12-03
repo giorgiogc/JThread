@@ -3,10 +3,10 @@
 \lstset{language=C++}
 \lstset{tabsize=4}
 \begin{document}
-	\title{JThread manual (v1.0.1)}
+	\title{JThread manual (v1.1.0)}
 	\author{Jori Liesenborgs\\
 	        {\tt jori@lumumba.luc.ac.be} }
-	\date{August 8, 2004}
+	\date{September 3, 2004}
 	\maketitle
 
 	\section{Introduction}
@@ -74,8 +74,15 @@ public:
 	To create your own thread, you have to derive a class from {\tt JThread},
 	which is depicted below. In your derived class, you have to implement
 	a member function {\tt Thread}, which will be executed in the new thread.
+	Your own {\tt Thread} implementation should call {\tt ThreadStarted}
+	immediately.
 
 	To start your thread, you simply have to call the {\tt Start} function.
+	This function finishes when your own {\tt Thread} function has called
+	{\tt ThreadStarted}. This way, when the {\tt Start} function
+	finishes, you can be really sure that your own {\tt Thread} implementation
+	is really running.
+
 	You can check if the thread is still running by calling {\tt IsRunning}.
 	If the thread has finished, you can check its return value by calling
 	{\tt GetReturnValue}. Finally, in case your thread gets stuck, you can
@@ -98,6 +105,8 @@ public:
 	virtual void *Thread() = 0;
 	bool IsRunning();
 	void *GetReturnValue();
+protected:
+	void ThreadStarted();
 };
 \end{lstlisting}
 	

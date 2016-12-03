@@ -1,7 +1,7 @@
-                                                                August 8, 2004
+                                                             September 4, 2004
 
 
-                        Notes about JThread (v1.0.1)
+                        Notes about JThread (v1.1.0)
 
 
 

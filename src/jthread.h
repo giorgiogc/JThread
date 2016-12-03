@@ -47,6 +47,8 @@ public:
 	virtual void *Thread() = 0;
 	bool IsRunning();
 	void *GetReturnValue();
+protected:
+	void ThreadStarted();
 private:
 #ifdef WIN32
 	static DWORD WINAPI TheThread(void *param);
@@ -62,8 +64,9 @@ private:
 	bool running;
 	
 	JMutex runningmutex;
-	JMutex continuemutex;
+	JMutex continuemutex,continuemutex2;
 	bool mutexinit;
 };
 
 #endif // JTHREAD_H
+
