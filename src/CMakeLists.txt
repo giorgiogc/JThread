@@ -15,6 +15,17 @@ else (CMAKE_USE_WIN32_THREADS_INIT) # Use pthread
 	set(SOURCES pthread/jmutex.cpp pthread/jthread.cpp)
 	set(JTHREAD_CONFIG_WIN32THREADS "// Using pthread based threads")
 	set(JTHREAD_CONFIG_JMUTEXCRITICALSECTION "")
+
+	# Test pthread_cancel (doesn't exits on Android)
+	set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+	check_cxx_source_compiles("#include <pthread.h>\nint main(void) { pthread_cancel((pthread_t)0); return 0; }" JTHREAD_HAVE_PTHREADCANCEL)
+	if (NOT JTHREAD_HAVE_PTHREADCANCEL)
+		#message("Enabling JTHREAD_SKIP_PTHREAD_CANCEL")
+		add_definitions(-DJTHREAD_SKIP_PTHREAD_CANCEL)
+	else ()
+		#message("pthread_cancel appears to exist")
+	endif (NOT JTHREAD_HAVE_PTHREADCANCEL)
+
 endif (CMAKE_USE_WIN32_THREADS_INIT)
 
 if (UNIX)
