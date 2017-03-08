@@ -59,27 +59,9 @@ install(FILES ${HEADERS} DESTINATION include/jthread)
 install(TARGETS ${JTHREAD_INSTALLTARGETS} DESTINATION ${LIBRARY_INSTALL_DIR})
 
 if (UNIX)
-	if (NOT JTHREAD_COMPILE_STATIC_ONLY)
-		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-shared LOCATION)
-		get_filename_component(JTHREAD_LIBNAME "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME)
-		set(JTHREAD_LIBS "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME}" ${CMAKE_THREAD_LIBS_INIT})
-	else()
-		set(JTHREAD_LIBS "-L${LIBRARY_INSTALL_DIR}" "-ljthread" ${CMAKE_THREAD_LIBS_INIT})
-	endif()
+	set(JTHREAD_LIBS "-L${LIBRARY_INSTALL_DIR}" "-ljthread" ${CMAKE_THREAD_LIBS_INIT})
 else (UNIX)
-	if (JTHREAD_COMPILE_STATIC)
-		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static RELEASE_LOCATION)
-		get_filename_component(JTHREAD_LIBNAME_RELEASE "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
-		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-static DEBUG_LOCATION)
-		get_filename_component(JTHREAD_LIBNAME_DEBUG "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
-	else (JTHREAD_COMPILE_STATIC)
-		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-shared RELEASE_LOCATION)
-		get_filename_component(JTHREAD_LIBNAME_RELEASE "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
-		get_target_property(JTHREAD_LOCAL_LIBRARY_NAME jthread-shared DEBUG_LOCATION)
-		get_filename_component(JTHREAD_LIBNAME_DEBUG "${JTHREAD_LOCAL_LIBRARY_NAME}" NAME_WE)
-	endif (JTHREAD_COMPILE_STATIC)
-	set(JTHREAD_LIBS optimized "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_RELEASE}.lib" 
-		debug "${LIBRARY_INSTALL_DIR}/${JTHREAD_LIBNAME_DEBUG}.lib" ${CMAKE_THREAD_LIBS_INIT})
+	set(JTHREAD_LIBS optimized "${LIBRARY_INSTALL_DIR}/jthread.lib" debug "${LIBRARY_INSTALL_DIR}/jthread_d.lib" ${CMAKE_THREAD_LIBS_INIT})
 endif (UNIX)
 
 if (UNIX OR JTHREAD_COMPILE_STATIC)
@@ -99,6 +81,7 @@ endforeach()
 
 configure_file("${PROJECT_SOURCE_DIR}/cmake/JThreadConfig.cmake.in" 
 	       "${PROJECT_BINARY_DIR}/cmake/JThreadConfig.cmake")
+
 install(FILES 
 	"${PROJECT_BINARY_DIR}/cmake/JThreadConfig.cmake" 
 	DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/JThread)
@@ -109,6 +92,9 @@ if (UNIX)
 	endforeach()
 
 	configure_file(${PROJECT_SOURCE_DIR}/pkgconfig/jthread.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/jthread.pc)
+	
 	install(FILES ${PROJECT_BINARY_DIR}/pkgconfig/jthread.pc DESTINATION ${LIBRARY_INSTALL_DIR}/pkgconfig)
 endif (UNIX)
+
+
 

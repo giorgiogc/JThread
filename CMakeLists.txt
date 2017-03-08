@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.6)
-cmake_policy(SET CMP0026 OLD)
+cmake_minimum_required(VERSION 3.0)
 
 project(jthread)
-set(VERSION 1.3.1)
+set(VERSION 1.3.2)
+
+include(CheckCXXSourceCompiles)
 
 set (_DEFAULT_LIBRARY_INSTALL_DIR lib)
 if (EXISTS "${CMAKE_INSTALL_PREFIX}/lib32/" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
