@@ -3,10 +3,10 @@
 \lstset{language=C++}
 \lstset{tabsize=4}
 \begin{document}
-	\title{JThread manual (v1.3.1)}
+	\title{JThread manual (v1.3.2)}
 	\author{Jori Liesenborgs\\
 	        {\tt jori.liesenborgs@gmail.com} }
-	\date{November 8, 2011}
+	\date{March 10, 2017}
 	\maketitle
 
 	\section{Introduction}
@@ -126,6 +126,9 @@ void MyClass::MyFunction()
 	to block. You should only use the {\tt Kill} function when you're absolutely
 	sure that the thread is stuck in some loop and cannot be ended otherwise.
 
+	With the {\tt IsSameThread} function you can check if the thread of the
+	caller is the same as the thread that was started and is executing the
+	{\tt Thread} function.
 \begin{lstlisting}[frame=tb]{}
 class JThread
 {
@@ -137,6 +140,7 @@ public:
 	virtual void *Thread() = 0;
 	bool IsRunning();
 	void *GetReturnValue();
+	bool IsSameThread();
 protected:
 	void ThreadStarted();
 };
