@@ -69,10 +69,12 @@ int JThread::Start()
 		mutexinit = true;
 	}
 	
+	continuemutex.Lock();
 	runningmutex.Lock();
 	if (running)
 	{
 		runningmutex.Unlock();
+		continuemutex.Unlock();
 		return ERR_JTHREAD_ALREADYRUNNING;
 	}
 	runningmutex.Unlock();
@@ -81,7 +83,6 @@ int JThread::Start()
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
 	
-	continuemutex.Lock();
 	status = pthread_create(&threadid,&attr,TheThread,this);	
 	pthread_attr_destroy(&attr);
 	if (status != 0)
@@ -116,10 +117,12 @@ int JThread::Start()
 
 int JThread::Kill()
 {
+	continuemutex.Lock();
 	runningmutex.Lock();			
 	if (!running)
 	{
 		runningmutex.Unlock();
+		continuemutex.Unlock();
 		return ERR_JTHREAD_NOTRUNNING;
 	}
 #ifndef JTHREAD_SKIP_PTHREAD_CANCEL
@@ -127,6 +130,7 @@ int JThread::Kill()
 #endif // JTHREAD_SKIP_PTHREAD_CANCEL
 	running = false;
 	runningmutex.Unlock();
+	continuemutex.Unlock();
 	return 0;
 }
 

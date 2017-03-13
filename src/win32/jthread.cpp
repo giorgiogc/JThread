@@ -40,6 +40,8 @@ JThread::JThread()
 	retval = NULL;
 	mutexinit = false;
 	running = false;
+	threadid = 0;
+	threadhandle = 0;
 }
 
 JThread::~JThread()
@@ -68,15 +70,16 @@ int JThread::Start()
 		}		mutexinit = true;
 	}
 	
+	continuemutex.Lock();
 	runningmutex.Lock();
 	if (running)
 	{
 		runningmutex.Unlock();
+		continuemutex.Unlock();
 		return ERR_JTHREAD_ALREADYRUNNING;
 	}
 	runningmutex.Unlock();
 	
-	continuemutex.Lock();
 #ifndef _WIN32_WCE
 	threadhandle = (HANDLE)_beginthreadex(NULL,0,TheThread,this,0,&threadid);
 #else
@@ -109,16 +112,20 @@ int JThread::Start()
 
 int JThread::Kill()
 {
+	continuemutex.Lock();
 	runningmutex.Lock();			
 	if (!running)
 	{
 		runningmutex.Unlock();
+		continuemutex.Unlock();
 		return ERR_JTHREAD_NOTRUNNING;
 	}
 	TerminateThread(threadhandle,0);
 	CloseHandle(threadhandle);
+	threadhandle = 0;
 	running = false;
 	runningmutex.Unlock();
+	continuemutex.Unlock();
 	return 0;
 }
 
@@ -174,6 +181,7 @@ DWORD WINAPI JThread::TheThread(void *param)
 	jthread->running = false;
 	jthread->retval = ret;
 	CloseHandle(jthread->threadhandle);
+	jthread->threadhandle = 0;
 	jthread->runningmutex.Unlock();
 	return 0;		
 }
