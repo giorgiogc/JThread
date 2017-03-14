@@ -38,6 +38,7 @@ JThread::JThread()
 	retval = NULL;
 	mutexinit = false;
 	running = false;
+	threadid = 0;
 }
 
 JThread::~JThread()
@@ -129,6 +130,7 @@ int JThread::Kill()
 	pthread_cancel(threadid);
 #endif // JTHREAD_SKIP_PTHREAD_CANCEL
 	running = false;
+	threadid = 0;
 	runningmutex.Unlock();
 	continuemutex.Unlock();
 	return 0;
@@ -159,7 +161,20 @@ void *JThread::GetReturnValue()
 
 bool JThread::IsSameThread()
 {
-	return pthread_equal(pthread_self(), threadid);
+	bool same = false;
+
+	continuemutex.Lock();
+	runningmutex.Lock();			
+	if (running)
+	{
+		if (pthread_equal(pthread_self(), threadid))
+			same = true;
+	}
+
+	runningmutex.Unlock();
+	continuemutex.Unlock();
+
+	return same;
 }
 
 void *JThread::TheThread(void *param)
@@ -182,6 +197,7 @@ void *JThread::TheThread(void *param)
 	jthread->runningmutex.Lock();
 	jthread->running = false;
 	jthread->retval = ret;
+	jthread->threadid = 0;
 	jthread->runningmutex.Unlock();
 
 	return NULL;

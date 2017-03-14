@@ -153,7 +153,20 @@ void *JThread::GetReturnValue()
 
 bool JThread::IsSameThread()
 {
-	return GetCurrentThreadId() == threadid;
+	bool same = false;
+
+	continuemutex.Lock();
+	runningmutex.Lock();			
+	if (running)
+	{
+		if (GetCurrentThreadId() == threadid)
+			same = true;
+	}
+
+	runningmutex.Unlock();
+	continuemutex.Unlock();
+
+	return same;
 }
 
 #ifndef _WIN32_WCE
