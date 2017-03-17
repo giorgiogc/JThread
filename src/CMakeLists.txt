@@ -28,22 +28,22 @@ else (CMAKE_USE_WIN32_THREADS_INIT) # Use pthread
 
 endif (CMAKE_USE_WIN32_THREADS_INIT)
 
-if (UNIX)
+if (NOT MSVC)
 	set(JTHREAD_COMPILE_STATIC_ONLY OFF CACHE BOOL "Flag indicating if only a static library should be built, or both a dynamic and static one")
-else (UNIX)
+else ()
 	set(CMAKE_DEBUG_POSTFIX _d)
 	set(JTHREAD_COMPILE_STATIC ON CACHE BOOL "Flag indicating if a static library should be built, or a dynamic one")
-endif (UNIX)
+endif ()
 
-if (UNIX OR JTHREAD_COMPILE_STATIC)
+if (NOT MSVC OR JTHREAD_COMPILE_STATIC)
 	set(JTHREAD_INSTALLTARGETS jthread-static)
 	add_library(jthread-static STATIC ${SOURCES} ${HEADERS})
 	set_target_properties(jthread-static PROPERTIES OUTPUT_NAME jthread)
 	set_target_properties(jthread-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	target_link_libraries(jthread-static ${CMAKE_THREAD_LIBS_INIT})
-endif(UNIX OR JTHREAD_COMPILE_STATIC)
+endif()
 
-if ((UNIX AND NOT JTHREAD_COMPILE_STATIC_ONLY) OR (NOT UNIX AND NOT JTHREAD_COMPILE_STATIC))
+if ((NOT MSVC AND NOT JTHREAD_COMPILE_STATIC_ONLY) OR (MSVC AND NOT JTHREAD_COMPILE_STATIC))
 	add_library(jthread-shared SHARED ${SOURCES} ${HEADERS})
 	set_target_properties(jthread-shared PROPERTIES VERSION ${VERSION})
 	set_target_properties(jthread-shared PROPERTIES OUTPUT_NAME jthread)
@@ -58,19 +58,19 @@ include_directories(${PROJECT_BINARY_DIR}/src)
 install(FILES ${HEADERS} DESTINATION include/jthread)
 install(TARGETS ${JTHREAD_INSTALLTARGETS} DESTINATION ${LIBRARY_INSTALL_DIR})
 
-if (UNIX)
+if (NOT MSVC)
 	set(JTHREAD_LIBS "-L${LIBRARY_INSTALL_DIR}" "-ljthread" ${CMAKE_THREAD_LIBS_INIT})
-else (UNIX)
+else ()
 	set(JTHREAD_LIBS optimized "${LIBRARY_INSTALL_DIR}/jthread.lib" debug "${LIBRARY_INSTALL_DIR}/jthread_d.lib" ${CMAKE_THREAD_LIBS_INIT})
-endif (UNIX)
+endif ()
 
-if (UNIX OR JTHREAD_COMPILE_STATIC)
+if (NOT MSVC OR JTHREAD_COMPILE_STATIC)
 	set(JTHREAD_IMPORT "")
 	set(JTHREAD_EXPORT "")
-else (UNIX OR JTHREAD_COMPILE_STATIC)
+else ()
 	set(JTHREAD_IMPORT "__declspec(dllimport)")
 	set(JTHREAD_EXPORT "__declspec(dllexport)")
-endif (UNIX OR JTHREAD_COMPILE_STATIC)
+endif ()
 
 configure_file("${PROJECT_SOURCE_DIR}/src/jthreadconfig.h.in"
 	       "${PROJECT_BINARY_DIR}/src/jthreadconfig.h")
@@ -86,7 +86,7 @@ install(FILES
 	"${PROJECT_BINARY_DIR}/cmake/JThreadConfig.cmake" 
 	DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/JThread)
 
-if (UNIX)
+if (NOT MSVC)
 	foreach(ARG ${JTHREAD_LIBS})
 		set(JTHREAD_LIBS_PKGCONFIG "${JTHREAD_LIBS_PKGCONFIG} ${ARG}")
 	endforeach()
@@ -94,7 +94,7 @@ if (UNIX)
 	configure_file(${PROJECT_SOURCE_DIR}/pkgconfig/jthread.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/jthread.pc)
 	
 	install(FILES ${PROJECT_BINARY_DIR}/pkgconfig/jthread.pc DESTINATION ${LIBRARY_INSTALL_DIR}/pkgconfig)
-endif (UNIX)
+endif ()
 
 
 
