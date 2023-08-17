@@ -351,11 +351,14 @@ curpath = os.getcwd()
 
 try:
     if os.getenv("READTHEDOCS") == 'True':
-        dstdir = "_build/html"
+        dstdir = os.path.join(os.environ["READTHEDOCS_OUTPUT"], "html")
     else:
         dstdir = "../build/html"
 
     dstdir = os.path.abspath(dstdir)
+    if not os.path.exists(dstdir):
+        print("Destination directory did not exist, creating it")
+        os.makedirs(dstdir, exist_ok=True)
 
     os.chdir("../../doc")
     subprocess.call("pdflatex manual.tex", shell=True)
@@ -381,11 +384,12 @@ try:
 finally:
     os.chdir(curpath)
 
-with open("test.rst", "wb") as f:
+with open("test.rst", "wt") as f:
     f.write("Test output\n")
     f.write("===========\n\n")
     f.write(".. code-block:: none\n\n")
     output = subprocess.check_output("which doxygen ; pwd ; set ; ls ; ls _build ; ls _build/html ; ls ../ ; ", shell = True)
+    output = output.decode()
     for l in output.splitlines():
         f.write("    ")
         f.write(l)
