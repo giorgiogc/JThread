@@ -1,4 +1,4 @@
-set (HEADERS jmutex.h jthread.h jmutexautolock.h ${PROJECT_BINARY_DIR}/src/jthreadconfig.h)
+set (HEADERS jmutex.h jthread.h jmutexautolock.h ${PROJECT_BINARY_DIR}/jthread/jthreadconfig.h)
 
 add_definitions(-DJTHREAD_COMPILING)
 
@@ -52,8 +52,8 @@ if ((NOT MSVC AND NOT JTHREAD_COMPILE_STATIC_ONLY) OR (MSVC AND NOT JTHREAD_COMP
 	target_link_libraries(jthread-shared ${CMAKE_THREAD_LIBS_INIT})
 endif ()
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
-include_directories(${PROJECT_BINARY_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/jthread)
+include_directories(${PROJECT_BINARY_DIR}/jthread)
 
 install(FILES ${HEADERS} DESTINATION include/jthread)
 install(TARGETS ${JTHREAD_INSTALLTARGETS} DESTINATION ${LIBRARY_INSTALL_DIR})
@@ -72,8 +72,8 @@ else ()
 	set(JTHREAD_EXPORT "__declspec(dllexport)")
 endif ()
 
-configure_file("${PROJECT_SOURCE_DIR}/src/jthreadconfig.h.in"
-	       "${PROJECT_BINARY_DIR}/src/jthreadconfig.h")
+configure_file("${PROJECT_SOURCE_DIR}/jthread/jthreadconfig.h.in"
+	       "${PROJECT_BINARY_DIR}/jthread/jthreadconfig.h")
 
 foreach(ARG ${JTHREAD_LIBS})
 	set(JTHREAD_LIBS_CMAKECONFIG "${JTHREAD_LIBS_CMAKECONFIG} \"${ARG}\"")

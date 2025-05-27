@@ -24,5 +24,5 @@ if (NOT CMAKE_USE_WIN32_THREADS_INIT)
 	endif (NOT CMAKE_USE_PTHREADS_INIT)
 endif (NOT CMAKE_USE_WIN32_THREADS_INIT)
 
-add_subdirectory(src)
+add_subdirectory(jthread)
 
